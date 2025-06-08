@@ -8,21 +8,22 @@ public class Partido {
     private Equipo visitante;
     private int cant_goles_local;
     private int cant_goles_visitante;
-    private Map<String, int> goles_por_jugador;
+    private Map<String, Integer> goles_por_jugador;
 
     public Partido() {
         this.local = null;
         this.visitante = null;
         this.cant_goles_local = 0;
         this.cant_goles_visitante = 0;
-        this.goles_por_jugador
+        this.goles_por_jugador = new HashMap<String, Integer>();
     }
 
-    public Partido(Equipo local, Equipo visitante, int cant_goles_local, int cant_goles_visitante) {
+    public Partido(Equipo local, Equipo visitante, int cant_goles_local, int cant_goles_visitante, Map<String, Integer> goles_por_jugador) {
         this.local = local;
         this.visitante = visitante;
         this.cant_goles_local = cant_goles_local;
         this.cant_goles_visitante = cant_goles_visitante;
+        this.goles_por_jugador = goles_por_jugador;
     }
 
     public Equipo getLocal() {
@@ -55,6 +56,14 @@ public class Partido {
 
     public void setCantGolesVisitante(int cant_goles_visitante) {
         this.cant_goles_visitante = cant_goles_visitante;
+    }
+
+    public Map<String, Integer> getGolesPorJugador() {
+        return this.goles_por_jugador;
+    }
+
+    public void setGolesPorJugador(Map<String, Integer> goles_por_jugador) {
+        this.goles_por_jugador = goles_por_jugador;
     }
 
 }

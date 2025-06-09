@@ -1,50 +1,49 @@
 package com.gabriel.dominio;
 
-public class Jugador
-{
+public class Jugador {
     private String nombre;
     private int edad;
-    private int cant_goles;
+    private int cantGoles;
 
-    public Jugador(){
+    public Jugador() {
         this.nombre = "";
         this.edad = 0;
-        this.cant_goles = 0;
+        this.cantGoles = 0;
     }
 
-    public Jugador(String nombre, int edad){
+    public Jugador(String nombre, int edad) {
         this.nombre = nombre;
         this.edad = edad;
-        this.cant_goles = 0;
+        this.cantGoles = 0;
     }
 
-    public Jugador(String nombre, int edad, int cant_goles){
+    public Jugador(String nombre, int edad, int cantGoles) {
         this.nombre = nombre;
         this.edad = edad;
-        this.cant_goles = cant_goles;
+        this.cantGoles = cantGoles;
     }
 
-    public int getEdad(){
+    public int getEdad() {
         return this.edad;
     }
 
-    public void setEdad(int edad){
+    public void setEdad(int edad) {
         this.edad = edad;
     }
 
-    public String getNombre(){
+    public String getNombre() {
         return this.nombre;
     }
 
-    public void setNombre(String nombre){
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public int getCantGoles(){
-        return this.cant_goles;
+    public int getCantGoles() {
+        return this.cantGoles;
     }
 
-    public void setCantGoles(int cant_goles){
-        this.cant_goles = cant_goles;
+    public void setCantGoles(int cantGoles) {
+        this.cantGoles = cantGoles;
     }
 }

@@ -6,24 +6,18 @@ import java.util.Map;
 public class Partido {
     private Equipo local;
     private Equipo visitante;
-    private int cant_goles_local;
-    private int cant_goles_visitante;
-    private Map<String, Integer> goles_por_jugador;
+    private Map<Jugador, Integer> golesPorJugador;
 
     public Partido() {
         this.local = null;
         this.visitante = null;
-        this.cant_goles_local = 0;
-        this.cant_goles_visitante = 0;
-        this.goles_por_jugador = new HashMap<String, Integer>();
+        this.golesPorJugador = new HashMap<Jugador, Integer>();
     }
 
-    public Partido(Equipo local, Equipo visitante, int cant_goles_local, int cant_goles_visitante, Map<String, Integer> goles_por_jugador) {
+    public Partido(Equipo local, Equipo visitante, Map<Jugador, Integer> golesPorJugador) {
         this.local = local;
         this.visitante = visitante;
-        this.cant_goles_local = cant_goles_local;
-        this.cant_goles_visitante = cant_goles_visitante;
-        this.goles_por_jugador = goles_por_jugador;
+        this.golesPorJugador = golesPorJugador;
     }
 
     public Equipo getLocal() {
@@ -42,28 +36,11 @@ public class Partido {
         this.visitante = visitante;
     }
 
-    public int getCantGolesLocal() {
-        return this.cant_goles_local;
+    public Map<Jugador, Integer> getGolesPorJugador() {
+        return this.golesPorJugador;
     }
 
-    public void setCantGolesLocal(int cant_goles_local) {
-        this.cant_goles_local = cant_goles_local;
+    public void setGolesPorJugador(Map<Jugador, Integer> golesPorJugador) {
+        this.golesPorJugador = golesPorJugador;
     }
-
-    public int getCantGolesVisitante() {
-        return this.cant_goles_visitante;
-    }
-
-    public void setCantGolesVisitante(int cant_goles_visitante) {
-        this.cant_goles_visitante = cant_goles_visitante;
-    }
-
-    public Map<String, Integer> getGolesPorJugador() {
-        return this.goles_por_jugador;
-    }
-
-    public void setGolesPorJugador(Map<String, Integer> goles_por_jugador) {
-        this.goles_por_jugador = goles_por_jugador;
-    }
-
 }

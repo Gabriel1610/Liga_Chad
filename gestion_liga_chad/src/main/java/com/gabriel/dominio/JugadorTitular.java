@@ -1,29 +1,28 @@
 package com.gabriel.dominio;
 
-public class JugadorTitular extends Jugador{
-    private int minutos_jugados;
+public class JugadorTitular extends Jugador {
+    private int minutosJugados;
 
-    public JugadorTitular(String nombre, int edad, int cant_goles, int minutos_jugados){
-        super(nombre, edad, cant_goles);
-        this.minutos_jugados = minutos_jugados;
+    public JugadorTitular(String nombre, int edad, int cantGoles, int minutosJugados) {
+        super(nombre, edad, cantGoles);
+        this.minutosJugados = minutosJugados;
     }
 
-    public JugadorTitular(String nombre, int edad, int cant_goles){
-        super(nombre, edad, cant_goles);
-        this.minutos_jugados = 0;
+    public JugadorTitular(String nombre, int edad, int cantGoles) {
+        super(nombre, edad, cantGoles);
+        this.minutosJugados = 0;
     }
 
-    public JugadorTitular(){
+    public JugadorTitular() {
         super();
-        this.minutos_jugados = 0;
+        this.minutosJugados = 0;
     }
 
-    public int getMinutosJugados(){
-        return this.minutos_jugados;
+    public int getMinutosJugados() {
+        return this.minutosJugados;
     }
 
-    public void setMinutosJugados(int minutos_jugados){
-        this.minutos_jugados = minutos_jugados;
+    public void setMinutosJugados(int minutosJugados) {
+        this.minutosJugados = minutosJugados;
     }
-    
 }

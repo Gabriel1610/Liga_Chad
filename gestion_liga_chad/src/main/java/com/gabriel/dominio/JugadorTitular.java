@@ -13,6 +13,11 @@ public class JugadorTitular extends Jugador {
         this.minutosJugados = 0;
     }
 
+    public JugadorTitular(String nombre, int edad) {
+        super(nombre, edad);
+        this.minutosJugados = 0;
+    }
+
     public JugadorTitular() {
         super();
         this.minutosJugados = 0;

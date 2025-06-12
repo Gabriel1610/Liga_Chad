@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 import com.gabriel.dominio.*;
 import com.gabriel.servicios.*;
+import java.util.Scanner;
+import com.gabriel.dominio.*;
 
 /**
  * Hello world!
@@ -71,7 +73,6 @@ public class App
                     }
                     break;
                 case OPCIÓN_MOSTRAR_JUGADORES_TIPO:
-                    ligaChad.
                     break;
 
                 case OPCIÓN_MOSTRAR_GOLEADOR_LIGA:

@@ -65,7 +65,7 @@ public class Liga {
         }
         return existe;
     }
-
+    
     public Partido obtenerPartido(Equipo local, Equipo visitante){
         int i = 0;
         Partido partido = null;

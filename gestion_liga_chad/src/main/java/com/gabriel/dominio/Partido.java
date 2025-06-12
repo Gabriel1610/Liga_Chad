@@ -3,8 +3,6 @@ package com.gabriel.dominio;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.gabriel.servicios.EquipoServicio;
-
 public class Partido {
     private Equipo local;
     private Equipo visitante;
@@ -13,6 +11,12 @@ public class Partido {
     public Partido() {
         this.local = null;
         this.visitante = null;
+        this.golesPorJugador = new HashMap<Jugador, Integer>();
+    }
+
+    public Partido(Equipo local, Equipo visitante) {
+        this.local = local;
+        this.visitante = visitante;
         this.golesPorJugador = new HashMap<Jugador, Integer>();
     }
 

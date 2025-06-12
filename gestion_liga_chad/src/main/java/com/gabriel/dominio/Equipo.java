@@ -32,19 +32,13 @@ public class Equipo {
         this.jugadoresTitulares = jugadoresTitulares;
     }
 
-    public boolean perteneceAlEquipo(Jugador jugador) {
+    public boolean perteneceAlEquipo(String nombre) {
         boolean pertenece = false;
-        Iterator<JugadorTitular> jugadorTitular = this.getJugadoresTitulares().iterator();
-        Iterator<JugadorSuplente> jugadorSuplente = this.getJugadoresSuplentes().iterator();
-        while(!pertenece && jugadorTitular.hasNext()){
-            if (jugadorTitular.next().equals(jugador)) {
-                pertenece = true;
-            }
+        if(this.buscarJugadorTitularPorNombre(nombre) != null){
+            pertenece = true;
         }
-        while(!pertenece && jugadorSuplente.hasNext()){
-            if (jugadorSuplente.next().equals(jugador)) {
-                pertenece = true;
-            }
+        else if(this.buscarJugadorSuplentePorNombre(nombre) != null){
+            pertenece = true;
         }
         return pertenece;
     }

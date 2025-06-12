@@ -66,23 +66,23 @@ public class Liga {
         return existe;
     }
 
-    public boolean existePartido(Equipo local, Equipo visitante){
+    public Partido obtenerPartido(Equipo local, Equipo visitante){
         int i = 0;
-        boolean existe = false;
-        while(!existe && i < this.getPartidos().size()){
+        Partido partido = null;
+        while(partido == null && i < this.getPartidos().size()){
             if(this.getPartidos().get(i).getLocal().getNombre().equals(local.getNombre()) &&
                 this.getPartidos().get(i).getVisitante().getNombre().equals(visitante.getNombre())){
-                existe = true;
+                partido = this.getPartidos().get(i);
             }
             else{
                 i++;
             }
         }
-        return existe;
+        return partido;
     }
 
-    public void agregarPartido(Equipo local, Equipo suplente){
-        this.getPartidos().add(new Partido());
+    public void agregarPartido(Equipo local, Equipo visitante){
+        this.getPartidos().add(new Partido(local, visitante));
     }
 
     public void ordenarEquiposPorNombre() {

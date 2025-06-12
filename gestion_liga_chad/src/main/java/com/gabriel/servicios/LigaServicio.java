@@ -8,13 +8,6 @@ public class LigaServicio {
     private static final int MÍN_CANT_GOLES = 0;
     private static final int MÍN_CANT_MINUTOS_JUGADOS = 0;
     private static final int MÍN_CANT_PARTIDOS_JUGADOS = 0;
-
-    public Equipo buscarEquipoPorNombre(String nombreEquipo, Liga laLiga){
-        if (nombreEquipo == null || nombreEquipo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del equipo no puede estar vacío");
-        }
-        return new Equipo(nombreEquipo);
-    }
     
     public Equipo crearEquipo(String nombreEquipo, Liga laLiga) {
         if (nombreEquipo == null || nombreEquipo.trim().isEmpty()) {
@@ -26,12 +19,51 @@ public class LigaServicio {
         return new Equipo(nombreEquipo);
     }
 
+    public Equipo encontrarEquipo(String nombreEquipo, Liga laLiga) {
+        Equipo equipoEncontrado;
+        if (nombreEquipo == null || nombreEquipo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del equipo no puede estar vacío");
+        }
+        equipoEncontrado = laLiga.buscarEquipoPorNombre(nombreEquipo);
+        if (equipoEncontrado == null) {
+            throw new IllegalArgumentException("Ese equipo no se encuentra registrado");
+        }
+        return equipoEncontrado;
+    }
+
+    public void registrarPartido(Equipo equipoLocal, Equipo equipoVisitante, Liga laLiga) {
+        if(laLiga.obtenerPartido(equipoLocal, equipoVisitante) == null){
+            throw new IllegalArgumentException("Ese partido ya fue registrado en la liga");
+        }
+        laLiga.agregarPartido(equipoLocal, equipoVisitante);
+    }
+
+    public void asignarGolesPartido(Equipo equipoLocal, Equipo equipoVisitante, String nombreJugador, Liga laLiga) {
+        JugadorTitular jugadorTitular = null;
+        JugadorSuplente jugadorSuplente = null;
+        if(laLiga.obtenerPartido(equipoLocal, equipoVisitante) == null){
+            throw new IllegalArgumentException("Ese partido no existe en la liga");
+        }
+        jugadorTitular = equipoLocal.
+        if(!equipoLocal.perteneceAlEquipo(nombreJugador) && !equipoVisitante.perteneceAlEquipo(nombreJugador)){
+            throw new IllegalArgumentException("El jugador ingresado no pertenece a ninguno de los equipos del partido");
+        }
+        laLiga.obtenerPartido(equipoLocal, equipoVisitante).
+    }
+
     public void registrarNombreJugador(String nombreJugador, Liga laLiga) {
         if (nombreJugador == null || nombreJugador.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del jugador no puede estar vacío");
         }
         if (laLiga.existeJugador(nombreJugador)) {
             throw new IllegalArgumentException("Ese jugador ya se encuentra registrado");
+        }
+        return;
+    }
+
+    public void validarNombreJugador(String nombreJugador) {
+        if (nombreJugador == null || nombreJugador.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del jugador no puede estar vacío");
         }
         return;
     }
@@ -58,8 +90,8 @@ public class LigaServicio {
     }
 
     public void registrarPartidosJugadosJugador(int cantPartidosIngresados) {
-        if (cantPartidosIngresados < MÍN_CANT_MINUTOS_JUGADOS) {
-            throw new IllegalArgumentException("El jugador no puede tener menos de " + MÍN_CANT_MINUTOS_JUGADOS + " partidos jugados.");
+        if (cantPartidosIngresados < MÍN_CANT_PARTIDOS_JUGADOS) {
+            throw new IllegalArgumentException("El jugador no puede tener menos de " + MÍN_CANT_PARTIDOS_JUGADOS + " partidos jugados.");
         }
         return;
     }

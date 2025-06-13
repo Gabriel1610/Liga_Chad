@@ -37,7 +37,7 @@ public class Partido {
     public int obtenerGolesLocal() {
         int cant_goles_local = 0;
         for (Jugador jugador : this.getGolesPorJugador().keySet()) {
-            if(this.getLocal().perteneceAlEquipo(jugador)){
+            if(this.getLocal().perteneceAlEquipo(jugador.getNombre())){
                 cant_goles_local++;
             }
         }
@@ -47,7 +47,7 @@ public class Partido {
     public int obtenerGolesVisitante() {
         int cant_goles_visitante = 0;
         for (Jugador jugador : this.getGolesPorJugador().keySet()) {
-            if(this.getVisitante().perteneceAlEquipo(jugador)){
+            if(this.getVisitante().perteneceAlEquipo(jugador.getNombre())){
                 cant_goles_visitante++;
             }
         }

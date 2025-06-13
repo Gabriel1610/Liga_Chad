@@ -158,6 +158,10 @@ public class Liga {
         }
     }
 
+    public int obtenerCantidadDePartidos(){
+        return this.getPartidos().size();
+    }
+
     public int obtenerCantGoles(Equipo equipo){
         int cantidadGoles = 0;
         for (Partido partido : this.getPartidos()) {
@@ -170,7 +174,7 @@ public class Liga {
         return cantidadGoles;
     }
 
-    public void mostrarJugadorTitular() {
+    public void mostrarJugadorTitularConMásPartidos() {
         JugadorTitular jugadorConMásMinutos = null;
         for (Equipo equipo : this.getEquipos()) {
             for (JugadorTitular jugador : equipo.getJugadoresTitulares()) {

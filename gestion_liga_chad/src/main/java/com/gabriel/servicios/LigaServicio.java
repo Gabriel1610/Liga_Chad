@@ -1,7 +1,6 @@
 package com.gabriel.servicios;
 
-import com.gabriel.dominio.Equipo;
-import com.gabriel.dominio.Liga;
+import com.gabriel.dominio.*;
 
 public class LigaServicio {
     private static final int EDAD_MÍNIMA = 6;
@@ -32,7 +31,7 @@ public class LigaServicio {
     }
 
     public void registrarPartido(Equipo equipoLocal, Equipo equipoVisitante, Liga laLiga) {
-        if(laLiga.obtenerPartido(equipoLocal, equipoVisitante) == null){
+        if(laLiga.obtenerPartido(equipoLocal, equipoVisitante) != null){
             throw new IllegalArgumentException("Ese partido ya fue registrado en la liga");
         }
         laLiga.agregarPartido(equipoLocal, equipoVisitante);
@@ -44,11 +43,25 @@ public class LigaServicio {
         if(laLiga.obtenerPartido(equipoLocal, equipoVisitante) == null){
             throw new IllegalArgumentException("Ese partido no existe en la liga");
         }
-        jugadorTitular = equipoLocal.
-        if(!equipoLocal.perteneceAlEquipo(nombreJugador) && !equipoVisitante.perteneceAlEquipo(nombreJugador)){
-            throw new IllegalArgumentException("El jugador ingresado no pertenece a ninguno de los equipos del partido");
+        jugadorTitular = equipoLocal.buscarJugadorTitularPorNombre(nombreJugador);
+        if(jugadorTitular == null){
+            jugadorSuplente = equipoLocal.buscarJugadorSuplentePorNombre(nombreJugador);
+            if(jugadorSuplente == null){
+                jugadorTitular = equipoVisitante.buscarJugadorTitularPorNombre(nombreJugador);
+                if(jugadorTitular == null){
+                    jugadorSuplente = equipoVisitante.buscarJugadorSuplentePorNombre(nombreJugador);
+                    if(jugadorSuplente == null){
+                        throw new IllegalArgumentException("El jugador no pertenece a ningún equipo del partido");
+                    }
+                }
+            }
         }
-        laLiga.obtenerPartido(equipoLocal, equipoVisitante).
+        if(jugadorTitular != null){
+            laLiga.obtenerPartido(equipoLocal, equipoVisitante).registrarGol((Jugador) jugadorTitular);
+        }
+        else{
+            laLiga.obtenerPartido(equipoLocal, equipoVisitante).registrarGol((Jugador) jugadorSuplente);
+        }
     }
 
     public void registrarNombreJugador(String nombreJugador, Liga laLiga) {

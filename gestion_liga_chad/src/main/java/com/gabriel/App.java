@@ -49,6 +49,12 @@ public class App
                     }
                     break;
                 case OPCIÓN_ASIGNAR_GOLES_PARTIDO:
+                    if(ligaChad.obtenerCantidadDePartidos() > 0){
+                        asignarGolesPartido(teclado, ligaChad);
+                    }
+                    else{
+                        System.out.println("Primero debe crear partidos para poder registrar goles :(");
+                    }
                     break;
                 case OPCIÓN_CREAR_EQUIPO:
                     nuevoEquipo = crearEquipo(teclado, ligaChad);
@@ -72,17 +78,21 @@ public class App
                         System.out.println("Primero debe agregar por lo menos 2 equipos para poder registrar un partido :(");
                     }
                     break;
+                    
                 case OPCIÓN_MOSTRAR_JUGADORES_TIPO:
+                    ligaChad.mostrarJugadores();
                     break;
 
                 case OPCIÓN_MOSTRAR_GOLEADOR_LIGA:
-                    // Calcular y mostrar el goleador de la liga
+                    mostrarGoleadorDeLaLiga(ligaChad);
                     break;
 
                 case OPCIÓN_MOSTRAR_PROMEDIO_GOLES_POR_PARTIDO:
+                    mostrarPromedioGolesPartido(ligaChad);
                     break;
 
                 case OPCIÓN_MOSTRAR_RANKING_EQUIPOS_POR_GOLES:
+                    ligaChad.mostrarRanking();
                     break;
 
                 case OPCIÓN_TRANSFERIR_JUGADOR:
@@ -92,6 +102,7 @@ public class App
                     break;
 
                 case OPCIÓN_MOSTRAR_TITULAR_MÁX_MINUTOS:
+                    ligaChad.mostrarJugadorTitularConMásPartidos();
                     break;
 
                 case OPCIÓN_REPORTE_LIGA:
@@ -163,6 +174,11 @@ public class App
         }while(repetir);
         return nuevoEquipo;
     }
+    public static void mostrarGoleadorDeLaLiga(Liga laLiga){
+        Jugador jugador;
+        jugador = laLiga.obtenerGoleador();
+        System.out.println("El goleador de la liga es " + jugador.getNombre());
+    }
 
     public static void asignarGolesPartido(Scanner teclado, Liga laLiga){
         Equipo local, visitante;
@@ -203,6 +219,12 @@ public class App
             }
         }while(repetir);
         return equipo;
+    }
+
+    public static void mostrarPromedioGolesPartido(Liga laLiga){
+        double promedio;
+        promedio = laLiga.obtenerPromGolesPorPartido();
+        System.out.printf("El promedio de goles por partidos es %.2f", promedio);
     }
 
     public static void exportarJugadoresACSV(Scanner teclado, Liga laLiga){

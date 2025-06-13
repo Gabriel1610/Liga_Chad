@@ -196,6 +196,7 @@ public class Equipo {
 
     public void agregarJugadorTitular(JugadorTitular jugador){
         this.jugadoresTitulares.add(jugador);
+        this.ordenarJugadoresTitularesPorNombre();
     }
 
     public void borrarJugadorTitular(JugadorTitular jugador){
@@ -204,6 +205,7 @@ public class Equipo {
 
     public void agregarJugadorSuplente(JugadorSuplente jugador){
         this.jugadoresSuplentes.add(jugador);
+        this.ordenarJugadoresSuplentesPorNombre();
     }
 
     public void borrarJugadorSuplente(JugadorSuplente jugador){

@@ -17,12 +17,6 @@ public class Jugador {
         this.cantGoles = 0;
     }
 
-    public Jugador(String nombre, int edad, int cantGoles) {
-        this.nombre = nombre;
-        this.edad = edad;
-        this.cantGoles = cantGoles;
-    }
-
     public int getEdad() {
         return this.edad;
     }

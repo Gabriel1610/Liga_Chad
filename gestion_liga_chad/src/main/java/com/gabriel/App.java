@@ -1,6 +1,7 @@
 package com.gabriel;
 
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import com.gabriel.dominio.*;
@@ -14,16 +15,14 @@ import com.gabriel.dominio.*;
  */
 public class App 
 {
-    private static final int CANT_OPCIONES = 15;
+    private static final int CANT_OPCIONES = 13;
     private static final int OPCIÓN_REGISTRAR_JUGADORES = 1;
     private static final int OPCIÓN_CREAR_EQUIPO = 2;
     public static final int OPCIÓN_EXPORTAR_JUGADORES_CSV = 12;
     public static final int OPCIÓN_REGISTRAR_PARTIDO = 3;
-    public static final int OPCIÓN_REPORTE_EQUIPO = 14;
     public static final int OPCIÓN_ASIGNAR_GOLES_PARTIDO = 4;
     public static final int OPCIÓN_MOSTRAR_JUGADORES_TIPO = 5;
     public static final int OPCIÓN_MOSTRAR_GOLEADOR_LIGA = 6;
-    public static final int OPCIÓN_REPORTE_LIGA = 13;
     public static final int OPCIÓN_MOSTRAR_PROMEDIO_GOLES_POR_PARTIDO = 7;
     public static final int OPCIÓN_MOSTRAR_RANKING_EQUIPOS_POR_GOLES = 8;
     public static final int OPCIÓN_TRANSFERIR_JUGADOR = 9;
@@ -35,6 +34,66 @@ public class App
         int opciónMenú;
         Equipo nuevoEquipo = null;
         Scanner teclado = new Scanner(System.in);
+        Equipo boca, river, independiente, vélez;
+        Partido partido1, partido2, partido3;
+        ligaChad.agregarEquipo(new Equipo("Boca"));
+        ligaChad.agregarEquipo(new Equipo("River"));
+        ligaChad.agregarEquipo(new Equipo("Vélez"));
+        ligaChad.agregarEquipo(new Equipo("Independiente"));
+
+        boca = ligaChad.buscarEquipoPorNombre("Boca");
+        boca.agregarJugadorTitular(new JugadorTitular("Agustín Rossi", 25));
+        boca.agregarJugadorTitular(new JugadorTitular("Marcos Rojo", 32));
+        boca.agregarJugadorSuplente(new JugadorSuplente("Darío Benedetto", 33));
+        boca.agregarJugadorSuplente(new JugadorSuplente("Sebastián Villa", 27));
+
+        river = ligaChad.buscarEquipoPorNombre("River");
+        river.agregarJugadorTitular(new JugadorTitular("Franco Armani", 35));
+        river.agregarJugadorTitular(new JugadorTitular("Enzo Pérez", 36));
+        river.agregarJugadorSuplente(new JugadorSuplente("Julián Álvarez", 23));
+        river.agregarJugadorSuplente(new JugadorSuplente("Esequiel Barco", 24));
+
+        vélez = ligaChad.buscarEquipoPorNombre("Vélez");
+        vélez.agregarJugadorTitular(new JugadorTitular("Luca Orellano", 21));
+        vélez.agregarJugadorTitular(new JugadorTitular("Matías Vargas", 25));
+        vélez.agregarJugadorSuplente(new JugadorSuplente("Thiago Almada", 21));
+        vélez.agregarJugadorSuplente(new JugadorSuplente("Lucas Pratto", 34));
+
+        independiente = ligaChad.buscarEquipoPorNombre("Independiente");
+        independiente.agregarJugadorTitular(new JugadorTitular("Silvio Romero", 33));
+        independiente.agregarJugadorTitular(new JugadorTitular("Domingo Blanco", 28));
+        independiente.agregarJugadorSuplente(new JugadorSuplente("Andrés Roa", 26));
+        independiente.agregarJugadorSuplente(new JugadorSuplente("Alan Soñora", 24));
+
+        // Agregar partidos
+        ligaChad.agregarPartido(boca, river);
+        ligaChad.agregarPartido(boca, vélez);
+        ligaChad.agregarPartido(river, independiente);
+        ligaChad.agregarPartido(independiente, vélez);
+
+        partido1 = ligaChad.obtenerPartido(boca, river);
+        if (partido1 != null) {
+            partido1.registrarGol(boca.buscarJugadorTitularPorNombre("Marcos Rojo"));
+            partido1.registrarGol(river.buscarJugadorSuplentePorNombre("Julián Álvarez"));
+            partido1.registrarGol(boca.buscarJugadorSuplentePorNombre("Darío Benedetto"));
+            partido1.registrarGol(river.buscarJugadorSuplentePorNombre("Esequiel Barco"));
+            partido1.registrarGol(boca.buscarJugadorTitularPorNombre("Marcos Rojo"));
+        }
+
+        partido2 = ligaChad.obtenerPartido(independiente, vélez);
+        if (partido2 != null) {
+            partido2.registrarGol(independiente.buscarJugadorSuplentePorNombre("Andrés Roa"));
+            partido2.registrarGol(independiente.buscarJugadorTitularPorNombre("Domingo Blanco"));
+        }
+
+        partido3 = ligaChad.obtenerPartido(river, independiente);
+        if (partido3 != null) {
+            partido3.registrarGol(river.buscarJugadorSuplentePorNombre("Julián Álvarez"));
+            partido3.registrarGol(independiente.buscarJugadorTitularPorNombre("Silvio Romero"));
+            partido3.registrarGol(independiente.buscarJugadorTitularPorNombre("Domingo Blanco"));
+            partido3.registrarGol(river.buscarJugadorTitularPorNombre("Enzo Pérez"));
+            partido3.registrarGol(river.buscarJugadorTitularPorNombre("Enzo Pérez"));
+        }
         opciónMenú = solicitarOpción(teclado);
         while(opciónMenú != CANT_OPCIONES){
             System.out.println("\n\n");
@@ -96,19 +155,15 @@ public class App
                     break;
 
                 case OPCIÓN_TRANSFERIR_JUGADOR:
+                    transferirJugador(teclado, ligaChad);
                     break;
 
                 case OPCIÓN_MOSTRAR_SUPLENTES_NUNCA_INGRESADOS:
+                    mostrarSuplentesNuncaIngresados(ligaChad);
                     break;
 
                 case OPCIÓN_MOSTRAR_TITULAR_MÁX_MINUTOS:
                     ligaChad.mostrarJugadorTitularConMásPartidos();
-                    break;
-
-                case OPCIÓN_REPORTE_LIGA:
-                    break;
-
-                case OPCIÓN_REPORTE_EQUIPO:
                     break;
 
                 default:
@@ -140,8 +195,6 @@ public class App
         opciones.put(OPCIÓN_TRANSFERIR_JUGADOR, "Permitir transferir un jugador de un equipo a otro.");
         opciones.put(OPCIÓN_MOSTRAR_SUPLENTES_NUNCA_INGRESADOS, "Mostrar jugadores suplentes que nunca hayan ingresado.");
         opciones.put(OPCIÓN_MOSTRAR_TITULAR_MÁX_MINUTOS, "Mostrar el jugador titular con mayor cantidad de minutos jugados.");
-        opciones.put(OPCIÓN_REPORTE_LIGA, "Listar reporte general de la liga.");
-        opciones.put(OPCIÓN_REPORTE_EQUIPO, "Listar reporte de un equipo.");
         opciones.put(CANT_OPCIONES, "Salir.");
         for(int i = 1; i <= CANT_OPCIONES; i++){
             System.out.println(i + ") " + opciones.get(i));
@@ -174,10 +227,32 @@ public class App
         }while(repetir);
         return nuevoEquipo;
     }
+
     public static void mostrarGoleadorDeLaLiga(Liga laLiga){
         Jugador jugador;
         jugador = laLiga.obtenerGoleador();
         System.out.println("El goleador de la liga es " + jugador.getNombre());
+    }
+
+    public static void transferirJugador(Scanner teclado, Liga laLiga){
+        String nombreJugador;
+        Equipo equipoOrigen, equipoDestino;
+        EquipoServicio equipoServicio = new EquipoServicio();
+        boolean repetir;
+        do{
+            repetir = false;
+            try{
+                System.out.print("Ingrese el nombre del jugador: ");
+                nombreJugador = teclado.nextLine();
+                equipoOrigen = solicitarNombreDeUnEquipoExistente("Ingrese el nombre del equipo de origen: ", teclado, laLiga);
+                equipoDestino = solicitarNombreDeUnEquipoExistente("Ingrese el nombre del equipo destino: ", teclado, laLiga);
+                equipoServicio.transferirJugador(equipoOrigen, equipoDestino, nombreJugador);
+            }
+            catch(IllegalArgumentException e){
+                System.out.println(e.getMessage());
+                repetir = true;
+            }
+        }while(repetir);
     }
 
     public static void asignarGolesPartido(Scanner teclado, Liga laLiga){
@@ -251,12 +326,18 @@ public class App
         }while(repetir);
     }
 
+    public static void mostrarSuplentesNuncaIngresados(Liga laLiga){
+        ArrayList<JugadorSuplente> suplentesSinPartidos;
+        suplentesSinPartidos = laLiga.obtenerSuplentesSinPartidos();
+        System.out.println("Jugadores suplentes de la liga nunca ingresados:\n");
+        for(JugadorSuplente jugador : suplentesSinPartidos){
+            System.out.println(jugador.getNombre());
+        }
+    }
+
     public static void registrarJugador(Scanner teclado, Liga laLiga){
         String esTitular, nombre = null;
         int edad = 0;
-        int cantGoles = 0;
-        int minutosJugados = 0;
-        int cantPartidosIngresados = 0;
         Equipo equipo;
         boolean repetir;
         LigaServicio ligaServicio = new LigaServicio();
@@ -292,47 +373,11 @@ public class App
                 repetir = true;
             }
         }while(repetir);
-        do{
-            repetir = false;
-            try{
-                System.out.print("\nIngrese cantidad de goles del jugador: ");
-                cantGoles = teclado.nextInt();
-                ligaServicio.registrarGolesJugador(cantGoles);
-            }
-            catch(IllegalArgumentException e){
-                System.out.println(e.getMessage());
-                repetir = true;
-            }
-        }while(repetir);
         if(esTitular.equalsIgnoreCase("S")){
-            do{
-                repetir = false;
-                try{
-                    System.out.print("\nIngrese cantidad de minutos ya jugados por el jugador: ");
-                    minutosJugados = teclado.nextInt();
-                    ligaServicio.registrarMinutosJugador(minutosJugados);
-                }
-                catch(IllegalArgumentException e){
-                    System.out.println(e.getMessage());
-                    repetir = true;
-                }
-            }while(repetir);
-            equipo.agregarJugadorTitular(new JugadorTitular(nombre, edad, cantGoles, minutosJugados));
+            equipo.agregarJugadorTitular(new JugadorTitular(nombre, edad));
         }
         else{
-            do{
-                repetir = false;
-                try{
-                    System.out.print("\nIngrese cantidad de partidos que lleva ya jugado el jugador: ");
-                    cantPartidosIngresados = teclado.nextInt();
-                    ligaServicio.registrarPartidosJugadosJugador(cantPartidosIngresados);
-                }
-                catch(IllegalArgumentException e){
-                    System.out.println(e.getMessage());
-                    repetir = true;
-                }
-            }while(repetir);
-            equipo.agregarJugadorSuplente(new JugadorSuplente(nombre, edad, cantGoles, cantPartidosIngresados));
+            equipo.agregarJugadorSuplente(new JugadorSuplente(nombre, edad));
         }
         teclado.nextLine();
     }

@@ -128,6 +128,17 @@ public class Equipo {
         return jugadoresSinGoles;
     }
 
+    public void sumarMinutosAJugadoresTitulares(){
+        for(JugadorTitular jugadorTitular : this.getJugadoresTitulares()){
+            jugadorTitular.setMinutosJugados(jugadorTitular.getMinutosJugados() + 90);
+        }
+    }
+
+    public void realizarUnCambio(JugadorTitular jugadorTitular, JugadorSuplente jugadorSuplente, int minuto){
+        jugadorSuplente.setCantPartidosIngresados(jugadorSuplente.getCantPartidosIngresados() + 1);
+        jugadorTitular.setMinutosJugados(jugadorTitular.getMinutosJugados() - (90 - minuto));
+    }
+
     public JugadorTitular obtenerTitularConMásMinutos(){
         JugadorTitular jugadorMásMinutos = null;
         for(JugadorTitular jugador : this.getJugadoresTitulares()){

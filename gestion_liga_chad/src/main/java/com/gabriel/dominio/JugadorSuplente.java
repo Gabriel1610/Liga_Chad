@@ -3,13 +3,8 @@ package com.gabriel.dominio;
 public class JugadorSuplente extends Jugador {
     private int cantPartidosIngresados;
 
-    public JugadorSuplente(String nombre, int edad, int cantGoles, int cantPartidosIngresados) {
-        super(nombre, edad, cantGoles);
-        this.cantPartidosIngresados = cantPartidosIngresados;
-    }
-
-    public JugadorSuplente(String nombre, int edad, int cantGoles) {
-        super(nombre, edad, cantGoles);
+    public JugadorSuplente(String nombre, int edad) {
+        super(nombre, edad);
         this.cantPartidosIngresados = 0;
     }
 

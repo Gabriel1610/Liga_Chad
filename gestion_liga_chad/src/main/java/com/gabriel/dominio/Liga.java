@@ -17,13 +17,13 @@ public class Liga {
     }
 
     public void mostrarJugadores() {
-        System.out.printf("%-50s %s\n", "Jugador", "Tipo");
+        System.out.printf("%-30s%-15s%s\n", "Jugador", "Tipo", "Equipo");
         for (Equipo equipo : this.getEquipos()) {
             for (JugadorTitular jugadorTitular : equipo.getJugadoresTitulares()) {
-                System.out.printf("%-50s %s\n", jugadorTitular.getNombre(), "titular");
+                System.out.printf("%-30s%-15s%s\n", jugadorTitular.getNombre(), "titular", equipo.getNombre());
             }
             for (JugadorSuplente jugadorSuplente : equipo.getJugadoresSuplentes()) {
-                System.out.printf("%-50s %s\n", jugadorSuplente.getNombre(), "suplente");
+                System.out.printf("%-30s%-15s%s\n", jugadorSuplente.getNombre(), "suplente", equipo.getNombre());
             }
         }
     }
@@ -79,6 +79,18 @@ public class Liga {
             }
         }
         return partido;
+    }
+
+    public ArrayList<JugadorSuplente> obtenerSuplentesSinPartidos(){
+        ArrayList<JugadorSuplente> suplentesSinPartidos = new ArrayList<>();
+        for (Equipo equipo : this.getEquipos()) {
+            for (JugadorSuplente jugadorSuplente : equipo.getJugadoresSuplentes()) {
+                if (jugadorSuplente.getCantPartidosIngresados() == 0) {
+                    suplentesSinPartidos.add(jugadorSuplente);
+                }
+            }
+        }
+        return suplentesSinPartidos;
     }
 
     public void agregarPartido(Equipo local, Equipo visitante){
@@ -138,6 +150,7 @@ public class Liga {
                 if (cantEquiposAgregados == i) {
                     nombresEquipos[i] = equipo.getNombre();
                     cantGoles[i] = cantidadGoles;
+                    cantEquiposAgregados++;
                     agregado = true;
                 } else if (cantGoles[i] <= cantidadGoles) {
                     for (j = cantEquiposAgregados; j > i; j--) {

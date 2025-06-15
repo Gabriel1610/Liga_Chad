@@ -5,12 +5,17 @@ import java.util.Map;
 import java.util.ArrayList;
 
 public class Partido {
+    private final int DURACIÓN_PARTIDOS = 90;
     private Equipo local;
     private Equipo visitante;
     private int golesLocal;
     private int golesVisitante;
     private Map<Jugador, Integer> golesPorJugador;
     private ArrayList<Cambio> cambios;
+    private ArrayList<JugadorTitular> jugadoresTitularesLocal;
+    private ArrayList<JugadorSuplente> jugadoresSuplentesLocal;
+    private ArrayList<JugadorTitular> jugadoresTitularesVisitante;
+    private ArrayList<JugadorSuplente> jugadoresSuplentesVisitante;
 
     public Partido() {
         this.local = null;
@@ -19,6 +24,10 @@ public class Partido {
         this.golesVisitante = 0;
         this.golesPorJugador = new HashMap<Jugador, Integer>();
         this.cambios = new ArrayList<Cambio>();
+        this.jugadoresTitularesLocal = new ArrayList<JugadorTitular>();
+        this.jugadoresSuplentesLocal = new ArrayList<JugadorSuplente>();
+        this.jugadoresTitularesVisitante = new ArrayList<JugadorTitular>();
+        this.jugadoresSuplentesVisitante = new ArrayList<JugadorSuplente>();
     }
 
     public Partido(Equipo local, Equipo visitante) {
@@ -29,6 +38,10 @@ public class Partido {
         this.golesPorJugador = new HashMap<Jugador, Integer>();
         this.sumarMinutosAJugadores();
         this.cambios = new ArrayList<Cambio>();
+        this.jugadoresTitularesLocal = new ArrayList<JugadorTitular>();
+        this.jugadoresSuplentesLocal = new ArrayList<JugadorSuplente>();
+        this.jugadoresTitularesVisitante = new ArrayList<JugadorTitular>();
+        this.jugadoresSuplentesVisitante = new ArrayList<JugadorSuplente>();
     }    
 
     public void sumarMinutosAJugadores(){
@@ -89,9 +102,78 @@ public class Partido {
     }
 
     public void realizarCambio(JugadorTitular jugadorTitular, JugadorSuplente jugadorSuplente, int minuto){
-        jugadorTitular.setMinutosJugados(jugadorTitular.getMinutosJugados() - (90 - minuto));
-        jugadorSuplente.setCantPartidosIngresados(jugadorSuplente.getCantPartidosIngresados() + 1);
-        this.cambios.add(new Cambio(jugadorTitular, jugadorSuplente, minuto));
+        if(this.validarCambio(jugadorTitular, jugadorSuplente, minuto)){
+            jugadorTitular.setMinutosJugados(jugadorTitular.getMinutosJugados() - (90 - minuto));
+            jugadorSuplente.setCantPartidosIngresados(jugadorSuplente.getCantPartidosIngresados() + 1);
+            this.cambios.add(new Cambio(jugadorTitular, jugadorSuplente, minuto));
+        }
+        else{
+            throw new IllegalArgumentException("El cambio no se ha llevado a cabo ya sea porque los jugadores no pertenecen a un equipo del partido o no pertenecen al mismo equipo");
+        }
+    }
+
+    public boolean validarCambio(JugadorTitular jugadorTitular, JugadorSuplente jugadorSuplente, int minuto){
+        int j, i;
+        boolean permitirCambio = false;
+        boolean finalizarAnálisis = false;
+        i = 0;
+        if(minuto < 0 || minuto > this.DURACIÓN_PARTIDOS){
+            finalizarAnálisis = true;
+        }
+        while(i < this.getCambios().size() && !finalizarAnálisis){
+            if(this.getCambios().get(i).getJugadorTitular().equals(jugadorTitular)){
+                finalizarAnálisis = true;
+            }
+            else{
+                i++;
+            }
+        }
+        i = 0;
+        while(i < this.getCambios().size() && !finalizarAnálisis){
+            if(this.getCambios().get(i).getJugadorSuplente().equals(jugadorSuplente)){
+                finalizarAnálisis = true;
+            }
+            else{
+                i++;
+            }
+        }
+        i = 0;
+        while(i < this.getJugadoresTitularesLocal().size() && !finalizarAnálisis){
+            if(this.getJugadoresTitularesLocal().get(i).equals(jugadorTitular)){
+                j = 0;
+                while(j < this.getJugadoresSuplentesLocal().size() && !finalizarAnálisis){
+                    if(this.getJugadoresSuplentesLocal().get(i).equals(jugadorSuplente)){
+                        permitirCambio = true;
+                    }
+                    else{
+                        j++;
+                    }
+                }
+                finalizarAnálisis = true;
+            }
+            else{
+                i++;
+            }
+        }
+        i = 0;
+        while(i < this.getJugadoresTitularesVisitante().size() && !finalizarAnálisis){
+            if(this.getJugadoresTitularesVisitante().get(i).equals(jugadorTitular)){
+                j = 0;
+                while(j < this.getJugadoresSuplentesVisitante().size() && !finalizarAnálisis){
+                    if(this.getJugadoresSuplentesVisitante().get(i).equals(jugadorSuplente)){
+                        permitirCambio = true;
+                    }
+                    else{
+                        j++;
+                    }
+                }
+                finalizarAnálisis = true;
+            }
+            else{
+                i++;
+            }
+        }
+        return permitirCambio;
     }
 
     public int obtenerGolesDeJugador(Jugador jugador) {
@@ -136,5 +218,37 @@ public class Partido {
 
     public void setCambios(ArrayList<Cambio> cambios) {
         this.cambios = cambios;
+    }
+
+    public ArrayList<JugadorTitular> getJugadoresTitularesLocal() {
+        return jugadoresTitularesLocal;
+    }
+
+    public ArrayList<JugadorSuplente> getJugadoresSuplentesLocal() {
+        return jugadoresSuplentesLocal;
+    }
+
+    public ArrayList<JugadorTitular> getJugadoresTitularesVisitante() {
+        return jugadoresTitularesVisitante;
+    }
+
+    public ArrayList<JugadorSuplente> getJugadoresSuplentesVisitante() {
+        return jugadoresSuplentesVisitante;
+    }
+
+    public void setJugadoresTitularesLocal(ArrayList<JugadorTitular> jugadoresTitularesLocal) {
+        this.jugadoresTitularesLocal = jugadoresTitularesLocal;
+    }
+
+    public void setJugadoresSuplentesLocal(ArrayList<JugadorSuplente> jugadoresSuplentesLocal) {
+        this.jugadoresSuplentesLocal = jugadoresSuplentesLocal;
+    }
+
+    public void setJugadoresTitularesVisitante(ArrayList<JugadorTitular> jugadoresTitularesVisitante) {
+        this.jugadoresTitularesVisitante = jugadoresTitularesVisitante;
+    }
+
+    public void setJugadoresSuplentesVisitante(ArrayList<JugadorSuplente> jugadoresSuplentesVisitante) {
+        this.jugadoresSuplentesVisitante = jugadoresSuplentesVisitante;
     }
 }

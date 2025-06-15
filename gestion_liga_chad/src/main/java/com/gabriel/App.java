@@ -30,6 +30,7 @@ public class App
     public static final int OPCIÓN_MOSTRAR_SUPLENTES_NUNCA_INGRESADOS = 10;
     public static final int OPCIÓN_MOSTRAR_TITULAR_MÁX_MINUTOS = 11;
     public static final int CANT_INTENTOS_GOLES = 40;
+    public static final int DURACIÓN_PARTIDOS = 90;
     public static void main( String[] args )
     {
         Liga ligaChad = new Liga();
@@ -41,8 +42,10 @@ public class App
         Equipo boca, river, independiente, vélez;
         Equipo equipoLocalSorteado, equipoVisitanteSorteado;
         Jugador jugadorGoleador;
-        int númeroSorteo, minutoGol, máxCantPartidos = 0;
+        int númeroSorteo, minutoGol, máxCantPartidos = 0, minutoCambio;
         Partido partidoSorteado;
+        JugadorTitular jugadorSale;
+        JugadorSuplente jugadorEntra;
         ligaChad.agregarEquipo(new Equipo("Boca"));
         ligaChad.agregarEquipo(new Equipo("River"));
         ligaChad.agregarEquipo(new Equipo("Vélez"));
@@ -124,14 +127,23 @@ public class App
                 System.out.println("El gol se registró correctamente");
                 System.out.println("Este jugador lleva " + jugadorGoleador.getCantGoles() + " goles en la liga.");
                 System.out.println("El partido está yendo " + equipoLocalSorteado.getNombre() + " " + ligaChad.obtenerPartido(equipoLocalSorteado, equipoVisitanteSorteado).obtenerGolesLocal() + " vs. " + equipoVisitanteSorteado.getNombre() + " " + ligaChad.obtenerPartido(equipoLocalSorteado, equipoVisitanteSorteado).obtenerGolesVisitante());
+                minutoCambio = random.nextInt(DURACIÓN_PARTIDOS);
+                if(númeroSorteo >= CANT_INTENTOS_GOLES / 2){
+                    jugadorSale = equipoLocalSorteado.getJugadoresTitulares().get(random.nextInt(equipoLocalSorteado.getJugadoresTitulares().size()));
+                    jugadorEntra = equipoLocalSorteado.getJugadoresSuplentes().get(random.nextInt(equipoLocalSorteado.getJugadoresSuplentes().size()));
+                    System.out.println("Se intentará llevar a cabo el siguiente cambio: sale " + jugadorSale.getNombre() + " y entra " + jugadorEntra.getNombre() + " en " + equipoLocalSorteado.getNombre() + " a los " + minutoCambio + " minutos del partido.");
+                    ligaChad.obtenerPartido(equipoLocalSorteado, equipoVisitanteSorteado).realizarCambio(jugadorSale, jugadorEntra, minutoCambio);
+                }
+                else{
+                    jugadorSale = equipoVisitanteSorteado.getJugadoresTitulares().get(random.nextInt(equipoVisitanteSorteado.getJugadoresTitulares().size()));
+                    jugadorEntra = equipoVisitanteSorteado.getJugadoresSuplentes().get(random.nextInt(equipoVisitanteSorteado.getJugadoresSuplentes().size()));
+                    System.out.println("Se intentará llevar a cabo el siguiente cambio: sale " + jugadorSale.getNombre() + " y entra " + jugadorEntra.getNombre() + " en " + equipoVisitanteSorteado.getNombre() + " a los " + minutoCambio + " minutos del partido.");
+                    ligaChad.obtenerPartido(equipoLocalSorteado, equipoVisitanteSorteado).realizarCambio(jugadorSale, jugadorEntra, minutoCambio);
+                }
+                System.out.println("El cambio se llevó correctamente.");
             }
             catch(IllegalArgumentException e){
                 System.out.println(e.getMessage());
-            }
-            try{
-                if(númeroSorteo % 4 == 0 && númeroSorteo >= CANT_INTENTOS_GOLES / 2){
-                    
-                }
             }
         }
         

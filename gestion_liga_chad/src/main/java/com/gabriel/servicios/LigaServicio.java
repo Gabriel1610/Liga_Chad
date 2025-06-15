@@ -4,7 +4,6 @@ import com.gabriel.dominio.*;
 
 public class LigaServicio {
     private static final int EDAD_MÍNIMA = 6;
-    private static final int MÍN_CANT_GOLES = 0;
     private static final int MÍN_CANT_MINUTOS_JUGADOS = 0;
     private static final int MÍN_CANT_PARTIDOS_JUGADOS = 0;
     private static final int DURACIÓN_PARTIDOS = 90;
@@ -34,6 +33,9 @@ public class LigaServicio {
     public void registrarPartido(Equipo equipoLocal, Equipo equipoVisitante, Liga laLiga) {
         if(laLiga.obtenerPartido(equipoLocal, equipoVisitante) != null){
             throw new IllegalArgumentException("Ese partido ya fue registrado en la liga");
+        }
+        if(equipoLocal == equipoVisitante){
+            throw new IllegalArgumentException("Un equipo no puede jugar contra sí mismo");
         }
         laLiga.agregarPartido(equipoLocal, equipoVisitante);
     }
@@ -72,11 +74,11 @@ public class LigaServicio {
         if(minuto < 0){
             throw new IllegalArgumentException("Ese gol es imposible porque los minutos no pueden ser negativos");
         }
-        if(partido.validarGol(nombreJugador, minuto, false)){
+        if(partido.validarGol(nombreJugador, minuto, esTitular)){
             laLiga.obtenerPartido(equipoLocal, equipoVisitante).registrarGol((Jugador) jugador);
         }
         else{
-            mensaje = "Ese gol no es válido porque el jugador es  ";
+            mensaje = "Ese gol no es válido porque el jugador es ";
             if(esTitular){
                 mensaje += "titular y ya había sido cambiado";
             }

@@ -8,6 +8,7 @@ import com.gabriel.dominio.*;
 import com.gabriel.servicios.*;
 import java.util.Scanner;
 import com.gabriel.dominio.*;
+import java.util.Random;
 
 /**
  * Hello world!
@@ -28,14 +29,20 @@ public class App
     public static final int OPCIÓN_TRANSFERIR_JUGADOR = 9;
     public static final int OPCIÓN_MOSTRAR_SUPLENTES_NUNCA_INGRESADOS = 10;
     public static final int OPCIÓN_MOSTRAR_TITULAR_MÁX_MINUTOS = 11;
+    public static final int CANT_INTENTOS_GOLES = 40;
     public static void main( String[] args )
     {
         Liga ligaChad = new Liga();
         int opciónMenú;
+        Random random = new Random();
         Equipo nuevoEquipo = null;
         Scanner teclado = new Scanner(System.in);
+        LigaServicio ligaServicio = new LigaServicio();
         Equipo boca, river, independiente, vélez;
-        Partido partido1, partido2, partido3;
+        Equipo equipoLocalSorteado, equipoVisitanteSorteado;
+        Jugador jugadorGoleador;
+        int númeroSorteo, minutoGol, máxCantPartidos = 0;
+        Partido partidoSorteado;
         ligaChad.agregarEquipo(new Equipo("Boca"));
         ligaChad.agregarEquipo(new Equipo("River"));
         ligaChad.agregarEquipo(new Equipo("Vélez"));
@@ -65,35 +72,69 @@ public class App
         independiente.agregarJugadorSuplente(new JugadorSuplente("Andrés Roa", 26));
         independiente.agregarJugadorSuplente(new JugadorSuplente("Alan Soñora", 24));
 
-        // Agregar partidos
-        ligaChad.agregarPartido(boca, river);
-        ligaChad.agregarPartido(boca, vélez);
-        ligaChad.agregarPartido(river, independiente);
-        ligaChad.agregarPartido(independiente, vélez);
-
-        partido1 = ligaChad.obtenerPartido(boca, river);
-        if (partido1 != null) {
-            partido1.registrarGol(boca.buscarJugadorTitularPorNombre("Marcos Rojo"));
-            partido1.registrarGol(river.buscarJugadorSuplentePorNombre("Julián Álvarez"));
-            partido1.registrarGol(boca.buscarJugadorSuplentePorNombre("Darío Benedetto"));
-            partido1.registrarGol(river.buscarJugadorSuplentePorNombre("Esequiel Barco"));
-            partido1.registrarGol(boca.buscarJugadorTitularPorNombre("Marcos Rojo"));
+        for(int p = 1; p < ligaChad.getEquipos().size(); p++){
+            máxCantPartidos += p;
+        }
+        for(int k = 0; k < máxCantPartidos; k++){
+            equipoLocalSorteado = ligaChad.getEquipos().get(random.nextInt(ligaChad.getEquipos().size()));
+            equipoVisitanteSorteado = ligaChad.getEquipos().get(random.nextInt(ligaChad.getEquipos().size()));
+            System.out.println("\n\nSe intentará registrar el partido " + equipoLocalSorteado.getNombre() + " vs. " + equipoVisitanteSorteado.getNombre());
+            try{
+                ligaServicio.registrarPartido(equipoLocalSorteado, equipoVisitanteSorteado, ligaChad);
+                System.out.println("El partido fue registrado correctamente");
+            }
+            catch(IllegalArgumentException e){
+                System.out.println(e.getMessage());
+            }
         }
 
-        partido2 = ligaChad.obtenerPartido(independiente, vélez);
-        if (partido2 != null) {
-            partido2.registrarGol(independiente.buscarJugadorSuplentePorNombre("Andrés Roa"));
-            partido2.registrarGol(independiente.buscarJugadorTitularPorNombre("Domingo Blanco"));
+        for(int j = 0; j < CANT_INTENTOS_GOLES; j++){
+            númeroSorteo = random.nextInt(CANT_INTENTOS_GOLES);
+            if(númeroSorteo % 4 == 0){
+                equipoLocalSorteado = ligaChad.getEquipos().get(random.nextInt(ligaChad.getEquipos().size()));
+                equipoVisitanteSorteado = ligaChad.getEquipos().get(random.nextInt(ligaChad.getEquipos().size()));
+            }
+            else{
+                partidoSorteado = ligaChad.getPartidos().get(random.nextInt(ligaChad.getPartidos().size()));
+                equipoLocalSorteado = partidoSorteado.getLocal();
+                equipoVisitanteSorteado = partidoSorteado.getVisitante();
+            }
+            if(númeroSorteo % 2 == 0 && númeroSorteo >= 3 * númeroSorteo / 4){
+                jugadorGoleador = (Jugador) equipoLocalSorteado.getJugadoresTitulares().get(random.nextInt(equipoLocalSorteado.getJugadoresTitulares().size()));
+            }
+            else if(númeroSorteo % 2 == 0 && númeroSorteo >= númeroSorteo / 2){
+                jugadorGoleador = (Jugador) equipoLocalSorteado.getJugadoresSuplentes().get(random.nextInt(equipoLocalSorteado.getJugadoresSuplentes().size()));
+            }
+            if(númeroSorteo % 2 == 0 && númeroSorteo >= númeroSorteo / 4){
+                jugadorGoleador = (Jugador) equipoVisitanteSorteado.getJugadoresTitulares().get(random.nextInt(equipoVisitanteSorteado.getJugadoresTitulares().size()));
+            }
+            else if(númeroSorteo % 2 == 0){
+                jugadorGoleador = (Jugador) equipoVisitanteSorteado.getJugadoresSuplentes().get(random.nextInt(equipoVisitanteSorteado.getJugadoresSuplentes().size()));
+            }
+            else if(númeroSorteo >= númeroSorteo / 2){
+                jugadorGoleador = (Jugador) ligaChad.getEquipos().get(random.nextInt(ligaChad.getEquipos().size())).getJugadoresTitulares().get(random.nextInt(equipoVisitanteSorteado.getJugadoresTitulares().size()));
+            }
+            else{
+                jugadorGoleador = (Jugador) ligaChad.getEquipos().get(random.nextInt(ligaChad.getEquipos().size())).getJugadoresSuplentes().get(random.nextInt(equipoVisitanteSorteado.getJugadoresSuplentes().size()));
+            }
+            minutoGol = random.nextInt(111) - 20;
+            System.out.println("\n\nSe intentará registrar un gol del jugador " + jugadorGoleador.getNombre() + " en el partido " + equipoLocalSorteado.getNombre() + " vs. " + equipoVisitanteSorteado.getNombre() + " al minuto " + minutoGol);
+            try{
+                ligaServicio.asignarGolesPartido(equipoLocalSorteado, equipoVisitanteSorteado, jugadorGoleador.getNombre(), minutoGol, ligaChad);
+                System.out.println("El gol se registró correctamente");
+                System.out.println("Este jugador lleva " + jugadorGoleador.getCantGoles() + " goles en la liga.");
+                System.out.println("El partido está yendo " + equipoLocalSorteado.getNombre() + " " + ligaChad.obtenerPartido(equipoLocalSorteado, equipoVisitanteSorteado).obtenerGolesLocal() + " vs. " + equipoVisitanteSorteado.getNombre() + " " + ligaChad.obtenerPartido(equipoLocalSorteado, equipoVisitanteSorteado).obtenerGolesVisitante());
+            }
+            catch(IllegalArgumentException e){
+                System.out.println(e.getMessage());
+            }
+            try{
+                if(númeroSorteo % 4 == 0 && númeroSorteo >= CANT_INTENTOS_GOLES / 2){
+                    
+                }
+            }
         }
-
-        partido3 = ligaChad.obtenerPartido(river, independiente);
-        if (partido3 != null) {
-            partido3.registrarGol(river.buscarJugadorSuplentePorNombre("Julián Álvarez"));
-            partido3.registrarGol(independiente.buscarJugadorTitularPorNombre("Silvio Romero"));
-            partido3.registrarGol(independiente.buscarJugadorTitularPorNombre("Domingo Blanco"));
-            partido3.registrarGol(river.buscarJugadorTitularPorNombre("Enzo Pérez"));
-            partido3.registrarGol(river.buscarJugadorTitularPorNombre("Enzo Pérez"));
-        }
+        
         opciónMenú = solicitarOpción(teclado);
         while(opciónMenú != CANT_OPCIONES){
             System.out.println("\n\n");
@@ -257,6 +298,7 @@ public class App
 
     public static void asignarGolesPartido(Scanner teclado, Liga laLiga){
         Equipo local, visitante;
+        int minuto;
         LigaServicio ligaServicio = new LigaServicio();
         String nombreJugador;
         boolean repetir;
@@ -268,7 +310,10 @@ public class App
                 System.out.print("Ingrese el nombre del jugador: ");
                 nombreJugador = teclado.nextLine();
                 ligaServicio.validarNombreJugador(nombreJugador);
-                ligaServicio.asignarGolesPartido(local, visitante, nombreJugador, laLiga);
+                System.out.print("Ingrese al minuto que fue hecho el gol: ");
+                minuto = teclado.nextInt();
+                teclado.nextLine();
+                ligaServicio.asignarGolesPartido(local, visitante, nombreJugador, minuto, laLiga);
             }    
             catch(IllegalArgumentException e){
                 System.out.println(e.getMessage());

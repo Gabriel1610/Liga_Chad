@@ -1,6 +1,7 @@
 package com.gabriel.dominio;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Liga {
     private ArrayList<Equipo> equipos;
@@ -33,16 +34,16 @@ public class Liga {
         for (Equipo equipo : this.getEquipos()) {
             for (JugadorTitular jugadorTitular : equipo.getJugadoresTitulares()) {
                 if (goleador == null) {
-                    goleador = jugadorTitular;
+                    goleador = (Jugador) jugadorTitular;
                 } else if (goleador.getCantGoles() < jugadorTitular.getCantGoles()) {
-                    goleador = jugadorTitular;
+                    goleador = (Jugador) jugadorTitular;
                 }
             }
             for (JugadorSuplente jugadorSuplente : equipo.getJugadoresSuplentes()) {
                 if (goleador == null) {
                     goleador = jugadorSuplente;
                 } else if (goleador.getCantGoles() < jugadorSuplente.getCantGoles()) {
-                    goleador = jugadorSuplente;
+                    goleador = (Jugador) jugadorSuplente;
                 }
             }
         }
@@ -187,7 +188,7 @@ public class Liga {
         return cantidadGoles;
     }
 
-    public void mostrarJugadorTitularConMásPartidos() {
+    public void mostrarJugadorTitularConMásMinutos() {
         JugadorTitular jugadorConMásMinutos = null;
         for (Equipo equipo : this.getEquipos()) {
             for (JugadorTitular jugador : equipo.getJugadoresTitulares()) {
@@ -209,12 +210,31 @@ public class Liga {
         return cantGolesTotales;
     }
 
-    public double obtenerPromGolesPorPartido(){
-        double promedio = 0;
-        if(this.getPartidos().size() > 0){
-            promedio = this.obtenerTotalGoles() / this.getPartidos().size();
+    public HashMap<Equipo, Double> obtenerPromGolesPorPartido(){
+        HashMap<Equipo, Double> promediosGoles = new HashMap<>();
+        int sumaGoles;
+        int cantPartidos;
+        for(Equipo equipo : this.getEquipos()){
+            promediosGoles.put(equipo, 0.00);
         }
-        return promedio;
+        for(Equipo equipo : promediosGoles.keySet()){
+            sumaGoles = 0;
+            cantPartidos = 0;
+            for(Partido partido : this.getPartidos()){
+                if(partido.getLocal().equals(equipo)){
+                    sumaGoles += partido.obtenerGolesLocal();
+                    cantPartidos++;
+                }
+                else if(partido.getVisitante().equals(equipo)){
+                    sumaGoles += partido.obtenerGolesVisitante();
+                    cantPartidos++;
+                }
+            }
+            if(cantPartidos > 0){
+                promediosGoles.put(equipo, new Double(sumaGoles / cantPartidos));
+            }
+        }
+        return promediosGoles;
     }
 
     public Equipo obtenerEquipoConMásGoles(){

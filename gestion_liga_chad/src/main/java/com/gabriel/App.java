@@ -29,16 +29,16 @@ public class App
     public static final int OPCIÓN_TRANSFERIR_JUGADOR = 9;
     public static final int OPCIÓN_MOSTRAR_SUPLENTES_NUNCA_INGRESADOS = 10;
     public static final int OPCIÓN_MOSTRAR_TITULAR_MÁX_MINUTOS = 11;
-    public static final int CANT_INTENTOS_GOLES = 40;
+    public static final int CANT_INTENTOS_GOLES = 50;
     public static final int DURACIÓN_PARTIDOS = 90;
     public static void main( String[] args )
     {
         Liga ligaChad = new Liga();
         int opciónMenú;
-        Random random = new Random();
         Equipo nuevoEquipo = null;
         Scanner teclado = new Scanner(System.in);
         LigaServicio ligaServicio = new LigaServicio();
+        /*Random random = new Random();
         Equipo boca, river, independiente, vélez;
         Equipo equipoLocalSorteado, equipoVisitanteSorteado;
         Jugador jugadorGoleador;
@@ -78,7 +78,7 @@ public class App
         for(int p = 1; p < ligaChad.getEquipos().size(); p++){
             máxCantPartidos += p;
         }
-        for(int k = 0; k < máxCantPartidos; k++){
+        for(int k = 0; k < máxCantPartidos * 1.5; k++){
             equipoLocalSorteado = ligaChad.getEquipos().get(random.nextInt(ligaChad.getEquipos().size()));
             equipoVisitanteSorteado = ligaChad.getEquipos().get(random.nextInt(ligaChad.getEquipos().size()));
             System.out.println("\n\nSe intentará registrar el partido " + equipoLocalSorteado.getNombre() + " vs. " + equipoVisitanteSorteado.getNombre());
@@ -146,7 +146,7 @@ public class App
                 System.out.println(e.getMessage());
             }
         }
-        
+        */
         opciónMenú = solicitarOpción(teclado);
         while(opciónMenú != CANT_OPCIONES){
             System.out.println("\n\n");
@@ -163,6 +163,7 @@ public class App
                 case OPCIÓN_ASIGNAR_GOLES_PARTIDO:
                     if(ligaChad.obtenerCantidadDePartidos() > 0){
                         asignarGolesPartido(teclado, ligaChad);
+                        System.out.println("El gol fue cargado correctamente :D");
                     }
                     else{
                         System.out.println("Primero debe crear partidos para poder registrar goles :(");
@@ -209,6 +210,7 @@ public class App
 
                 case OPCIÓN_TRANSFERIR_JUGADOR:
                     transferirJugador(teclado, ligaChad);
+                    System.out.println("Transferencia exitosa :D");
                     break;
 
                 case OPCIÓN_MOSTRAR_SUPLENTES_NUNCA_INGRESADOS:
@@ -216,7 +218,7 @@ public class App
                     break;
 
                 case OPCIÓN_MOSTRAR_TITULAR_MÁX_MINUTOS:
-                    ligaChad.mostrarJugadorTitularConMásPartidos();
+                    ligaChad.mostrarJugadorTitularConMásMinutos();
                     break;
 
                 default:
@@ -354,9 +356,11 @@ public class App
     }
 
     public static void mostrarPromedioGolesPartido(Liga laLiga){
-        double promedio;
-        promedio = laLiga.obtenerPromGolesPorPartido();
-        System.out.printf("El promedio de goles por partidos es %.2f", promedio);
+        HashMap<Equipo, Double> promediosGoles = laLiga.obtenerPromGolesPorPartido();
+        System.out.printf("%-30s%s\n", "Equipo", "goles/partido");
+        for(Equipo equipo : promediosGoles.keySet()){
+            System.out.printf("%-30s%.3f\n", equipo.getNombre(), promediosGoles.get(equipo).doubleValue());
+        }
     }
 
     public static void exportarJugadoresACSV(Scanner teclado, Liga laLiga){

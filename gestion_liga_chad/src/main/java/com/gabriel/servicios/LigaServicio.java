@@ -40,52 +40,14 @@ public class LigaServicio {
         laLiga.agregarPartido(equipoLocal, equipoVisitante);
     }
 
-    public void asignarGolesPartido(Equipo equipoLocal, Equipo equipoVisitante, String nombreJugador, int minuto, Liga laLiga) {
-        Jugador jugador = null;
+    public void asignarGolesPartido(Equipo equipoLocal, Equipo equipoVisitante, String nombreJugador, int minuto, Liga laLiga) throws IllegalArgumentException {
         Partido partido;
-        boolean esTitular = true;
-        String mensaje = "";
         partido = laLiga.obtenerPartido(equipoLocal, equipoVisitante);
         if(partido == null){
             throw new IllegalArgumentException("Ese partido no existe en la liga");
         }
-        jugador = (Jugador) equipoLocal.buscarJugadorTitularPorNombre(nombreJugador);
-        if(jugador == null){
-            jugador = (Jugador) equipoLocal.buscarJugadorSuplentePorNombre(nombreJugador);
-            if(jugador == null){
-                jugador = (Jugador) equipoVisitante.buscarJugadorTitularPorNombre(nombreJugador);
-                if(jugador == null){
-                    jugador = (Jugador) equipoVisitante.buscarJugadorSuplentePorNombre(nombreJugador);
-                    if(jugador == null){
-                        throw new IllegalArgumentException("El jugador no pertenece a ningún equipo del partido");
-                    }
-                    else{
-                        esTitular = false;
-                    }
-                }
-            }
-            else{
-                esTitular = false;
-            }
-        }
-        if(minuto > DURACIÓN_PARTIDOS){
-            throw new IllegalArgumentException("Un gol no puede haber sido hecho en el minuto " + minuto + " porque los partidos de fútbol tienen " + DURACIÓN_PARTIDOS + " minutos.");
-        }
-        if(minuto < 0){
-            throw new IllegalArgumentException("Ese gol es imposible porque los minutos no pueden ser negativos");
-        }
-        if(partido.validarGol(nombreJugador, minuto, esTitular)){
-            laLiga.obtenerPartido(equipoLocal, equipoVisitante).registrarGol((Jugador) jugador);
-        }
-        else{
-            mensaje = "Ese gol no es válido porque el jugador es ";
-            if(esTitular){
-                mensaje += "titular y ya había sido cambiado";
-            }
-            else{
-                mensaje += "suplente y todavía no había entrado al partido";
-            }
-            throw new IllegalArgumentException(mensaje);
+        if(partido.validarGol(nombreJugador, minuto)){
+            partido.registrarGol(nombreJugador);
         }
     }
 

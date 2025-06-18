@@ -260,32 +260,6 @@ public class Liga {
         return this.getEquipos().size();
     }
 
-    public void mostrarPromGolesPorEquipo() {
-        int cantPartidos, cantGoles;
-        double promedio;
-        System.out.printf("%-50s %s\n", "Equipo", "Promedio");
-        for (Equipo equipo : this.getEquipos()) {
-            cantGoles = 0;
-            cantPartidos = 0;
-            for (Partido partido : this.getPartidos()) {
-                if (partido.getLocal().equals(equipo)) {
-                    cantGoles += partido.obtenerGolesLocal();
-                    cantPartidos++;
-                } else if (partido.getVisitante().equals(equipo)) {
-                    cantGoles += partido.obtenerGolesVisitante();
-                    cantPartidos++;
-                }
-            }
-            System.out.printf("%-50s", equipo.getNombre());
-            if (cantPartidos > 0) {
-                promedio = (double) cantGoles / cantPartidos;
-                System.out.printf("%.2f\n", promedio);
-            } else {
-                System.out.printf("%.2f\n", 0);
-            }
-        }
-    }
-
     public ArrayList<Equipo> getEquipos() {
         return this.equipos;
     }
